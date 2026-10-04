@@ -1027,7 +1027,7 @@ progress::-webkit-progress-value {
     padding: 20px 24px 45px;
   }
   .signout {
-    display: none;
+    display: inline-flex;
   }
   .sidebar .brand {
     font-size: 15px;
@@ -1091,11 +1091,16 @@ progress::-webkit-progress-value {
     width: 100%;
   }
   .topbar {
-    height: 76px;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    height: auto;
+    min-height: 112px;
     padding: 12px 17px;
     gap: 10px;
   }
   .patient {
+    grid-column: 1;
+    grid-row: 1;
     gap: 8px;
     font-size: 12px;
   }
@@ -1113,7 +1118,18 @@ progress::-webkit-progress-value {
     padding: 7px 9px;
   }
   .role-switch {
-    margin-left: auto;
+    grid-column: 1 / -1;
+    grid-row: 2;
+    justify-self: start;
+    margin-left: 0;
+  }
+  .signout {
+    grid-column: 2;
+    grid-row: 1;
+    border: 1px solid #7e94ac;
+    background: #fff;
+    padding: 10px 14px;
+    min-height: 44px;
   }
   .content {
     padding: 18px 18px 95px;
