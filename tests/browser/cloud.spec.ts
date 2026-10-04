@@ -6,7 +6,7 @@ test("Supabase sync between independent caregiver and clinician browsers, offlin
   test.setTimeout(60000);
   await page.goto("/");
   await page
-    .getByRole("button", { name: "Enter clinician demo", exact: true })
+    .getByRole("button", { name: "Enter Clinician demo", exact: true })
     .click();
   await expect(
     page.getByText("Synchronized with Supabase · synthetic demo only", {
@@ -21,11 +21,16 @@ test("Supabase sync between independent caregiver and clinician browsers, offlin
   await caregiver
     .getByRole("button", { name: "Enter caregiver demo", exact: true })
     .click();
-  await expect(
-    caregiver.getByText("Synchronized with Supabase · synthetic demo only", {
-      exact: true,
-    }),
-  ).toBeVisible({ timeout: 15000 });
+  await expect
+    .poll(
+      () =>
+        caregiver.evaluate(
+          () =>
+            JSON.parse(localStorage.getItem("ng-tube-assistant-v1")!).revision,
+        ),
+      { timeout: 15000 },
+    )
+    .toBeGreaterThan(0);
   await page
     .getByRole("button", { name: "Edit plan", exact: true })
     .first()
@@ -34,11 +39,15 @@ test("Supabase sync between independent caregiver and clinician browsers, offlin
   const note = `Fictional cloud synchronization test ${Date.now()}`;
   await page.getByLabel("Written instructions").fill(note);
   await page.getByRole("button", { name: "Save plan", exact: true }).click();
-  await expect(caregiver.getByText(note, { exact: true })).toBeVisible({
-    timeout: 15000,
-  });
+  const caregiverInstructions = () =>
+    caregiver.evaluate(
+      () =>
+        JSON.parse(localStorage.getItem("ng-tube-assistant-v1")!).plans[0]
+          .instructions,
+    );
+  await expect.poll(caregiverInstructions, { timeout: 15000 }).toBe(note);
   await caregiver.reload();
-  await expect(caregiver.getByText(note, { exact: true })).toBeVisible();
+  await expect.poll(caregiverInstructions).toBe(note);
   await page.context().setOffline(true);
   await page
     .getByRole("button", { name: "Edit plan", exact: true })
@@ -48,8 +57,6 @@ test("Supabase sync between independent caregiver and clinician browsers, offlin
   await page.getByRole("button", { name: "Save plan", exact: true }).click();
   await expect(page.getByText(/Saved locally · pending/)).toBeVisible();
   await page.context().setOffline(false);
-  await expect(caregiver.getByText(original, { exact: true })).toBeVisible({
-    timeout: 15000,
-  });
+  await expect.poll(caregiverInstructions, { timeout: 15000 }).toBe(original);
   await caregiverContext.close();
 });

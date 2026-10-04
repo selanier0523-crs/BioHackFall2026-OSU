@@ -50,7 +50,7 @@ function records(s: DemoState) {
     {
       id: "patient",
       kind: "patient",
-      payload: { id: "DEMO-PATIENT-01", name: "Alex Demo", synthetic: true },
+      payload: { id: "DEMO-PATIENT-01", name: "Demo Patient", synthetic: true },
     },
     {
       id: "device",

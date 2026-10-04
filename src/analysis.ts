@@ -229,11 +229,11 @@ export const stopStates = new Set<Assessment>([
 export const statusText: Record<Assessment, [string, string]> = {
   COLLECTING: [
     "Collecting readings",
-    "A complete consecutive sensor window is needed.",
+    "Collecting enough valid readings to assess the result.",
   ],
   SENSOR_UNAVAILABLE: [
     "Do not proceed — sensor data unavailable",
-    "Check the demo data source, then collect a fresh complete window.",
+    "Check the data connection and collect new readings.",
   ],
   GASTRIC_COMPATIBLE: [
     "Indicators compatible with stomach placement",
@@ -241,7 +241,7 @@ export const statusText: Record<Assessment, [string, string]> = {
   ],
   POSSIBLE_AIRWAY: [
     "Do not proceed — possible airway placement",
-    "Repeated CO₂ patterns detected. Stop this simulated insertion and consult the demo help.",
+    "Repeated CO₂ patterns were detected. Do not continue insertion.",
   ],
   INCONCLUSIVE_CO2: [
     "Do not proceed — placement check incomplete",
@@ -249,19 +249,19 @@ export const statusText: Record<Assessment, [string, string]> = {
   ],
   PLACEMENT_UNCERTAIN: [
     "Do not proceed — placement check incomplete",
-    "The pH and CO₂ indicators do not provide a favorable demonstration result.",
+    "The readings do not support stomach placement.",
   ],
   FEEDING_NORMAL: [
     "Feeding indicators normal",
-    "Measured flows and gravity-adjusted pressure are within the demonstration model.",
+    "Flow and pressure are within the demo limits after accounting for height.",
   ],
   MONITOR: [
-    "Watching a changing signal",
-    "A signal is outside the demo range; checking whether it persists.",
+    "Checking an unusual reading",
+    "A reading is outside the demo limits. Checking whether it continues.",
   ],
   PAUSED: [
     "Prerecorded pump paused",
-    "The input fixture contains an intentional pause.",
+    "The recorded data includes an intentional pump pause.",
   ],
   HIGH_RESISTANCE: [
     "Stop feeding — increased resistance",
@@ -273,10 +273,10 @@ export const statusText: Record<Assessment, [string, string]> = {
   ],
   OBSTRUCTION_ALERT: [
     "Stop feeding — obstruction alert",
-    "Near-zero distal flow and excess pressure persist. This alert is latched for this scenario.",
+    "Flow at the tube end is near zero and pressure remains high. This warning stays active until the scenario is restarted.",
   ],
   DELIVERY_MISMATCH: [
-    "Stop feeding — delivery discrepancy",
+    "Stop feeding — flow readings differ",
     "The flow sensors disagree. This does not prove a blockage.",
   ],
   DEMO_FEED_COMPLETE: [

@@ -1,4 +1,4 @@
 plan_id,patient_id,device_id,start_time_utc,target_volume_ml,prescribed_flow_ml_hr,expected_duration_min,reminder_lead_min,clinician_id,instructions,education_title,education_url,ehr_sync_state
-DEMO-PLAN-01,DEMO-PATIENT-01,DEMO-DEVICE-01,2026-10-03T19:59:59.999Z,30,60,30,10,DEMO-CLINICIAN-01,Fictional demo order. Placement confirmation is a separate required workflow.,Placement checks and sensor limitations,,MOCK_PENDING
+DEMO-PLAN-01,DEMO-PATIENT-01,DEMO-DEVICE-01,2026-10-03T20:00:00.000Z,30,60,30,10,DEMO-CLINICIAN-01,Fictional demo order. Placement confirmation is a separate required workflow.,Placement checks and sensor limitations,,MOCK_PENDING
 DEMO-PLAN-02,DEMO-PATIENT-01,DEMO-DEVICE-01,2026-10-04T12:00:00.000Z,90,60,90,10,DEMO-CLINICIAN-01,Fictional schedule entry for reminder and order display testing.,Responding to app alerts,,MOCK_PENDING
 DEMO-PLAN-03,DEMO-PATIENT-01,DEMO-DEVICE-01,2026-10-04T16:00:00.000Z,120,80,90,15,DEMO-CLINICIAN-01,Fictional schedule entry. No real clinical instructions or hardware control.,Preparing the feeding equipment,,MOCK_PENDING

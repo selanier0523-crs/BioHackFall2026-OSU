@@ -1,6 +1,6 @@
 # Verification
 
-Verified on October 3, 2026 using the production preview, Chromium desktop automation, and a 390 × 844 mobile viewport.
+Verified on October 4, 2026 using the production preview, Chromium desktop automation, and a 390 × 844 mobile viewport.
 
 ## Deterministic reference comparisons
 
@@ -19,7 +19,9 @@ An initial metric discrepancy at zero proximal flow was investigated and fixed: 
 
 ## Browser workflow checks
 
-`npm run test:browser` exercises seven end-to-end tests against the built preview:
+`npm run test:browser` exercises eight end-to-end tests against the built preview:
+
+- Caregiver has a guided check → start → monitor flow, is labeled Caregiver, and sees no technical panels or demo controls. Videos are optional and separate; neither role has demo controls on the video screen.
 
 - Both credential pairs, invalid credential feedback, convenient entry buttons and caregiver/clinician switching without resetting position.
 - Insertion assistance, direct help access, fictional acknowledgment gating, normal full 30 mL feed, and a subsequent abbreviated check with insertion state retained.

@@ -53,13 +53,20 @@ import {
 import { loadSharedDemo, synchronize, syncStore } from "./persistence";
 import { connectSerial, disconnectSerial, serialSupported } from "./serial";
 import type { Sample } from "./csv";
+import CaregiverWorkflow from "./CaregiverWorkflow";
 type Tab = "today" | "placement" | "feeding" | "resources" | "history";
 const fmt = (v: unknown, decimals = 2) =>
   typeof v === "number" ? v.toFixed(decimals) : "Unavailable";
 const time = (seconds: number) =>
   `${Math.floor(seconds / 60)}:${String(Math.floor(seconds % 60)).padStart(2, "0")}`;
 const timeOf = (iso: string) =>
-  new Date(iso).toLocaleTimeString([], { hour: "numeric", minute: "2-digit" });
+  new Date(iso)
+    .toLocaleTimeString("en-US", {
+      hour: "numeric",
+      minute: "2-digit",
+      hour12: true,
+    })
+    .replace(/\s/g, "");
 const iconSize = 21;
 function Graph({
   rows,
@@ -549,9 +556,15 @@ function Resources({
   return (
     <>
       <div className="section-heading">
-        <span className="eyebrow">DEMONSTRATION LIBRARY</span>
-        <h1>Help, one step at a time.</h1>
-        <p>Local placeholders for clinician-approved education.</p>
+        {s.role === "clinician" && (
+          <span className="eyebrow">DEMONSTRATION LIBRARY</span>
+        )}
+        <h1>{s.role === "caregiver" ? "Videos" : "Videos and resources"}</h1>
+        <p>
+          {s.role === "caregiver"
+            ? "Videos are optional."
+            : "Demo videos. No video files are loaded."}
+        </p>
       </div>
       <label>
         Search resources
@@ -562,7 +575,7 @@ function Resources({
         />
       </label>
       <section className="card">
-        <h2>Assigned to Alex Demo</h2>
+        <h2>{s.role === "caregiver" ? "Your videos" : "Assigned resources"}</h2>
         {s.assignments.map((a) => (
           <div className="list-row" key={a.id}>
             <div>
@@ -638,7 +651,7 @@ function Resources({
             <textarea
               value={note}
               onChange={(e) => setNote(e.target.value)}
-              placeholder="A fictional note for the caregiver"
+              placeholder="Note for caregiver"
             />
           </label>
           <button className="primary">Assign resource</button>
@@ -658,16 +671,16 @@ function Resources({
             <p>No actual video is playing.</p>
           </div>
           <p>
-            This fictional resource explains the app workflow only. It contains
-            no insertion procedure or depth instructions. Actual care requires
-            clinician-approved training and confirmation.
+            This resource explains the demo app. It does not provide insertion
+            instructions. Actual care requires approved training and placement
+            confirmation.
           </p>
           <p>
             {topic.includes("placement")
-              ? "Collect fresh valid readings. The app demonstrates pH and CO₂ indicators, which cannot independently confirm tube location."
+              ? "Collect new readings. pH and CO₂ alone cannot confirm tube placement."
               : topic.includes("alert")
-                ? "An alert stops only this simulation. Acknowledging a warning does not resolve its cause. Open the sensor details or restart a fixture to inspect it."
-                : "Use the app’s help and fictional plan to explore the demonstration. There is no connection to a real feeding pump."}
+                ? "A warning stops the simulated feed. Acknowledging it does not fix the problem. Open sensor details or restart the scenario to review it."
+                : "This app simulates feeding. No real pump is connected."}
           </p>
         </section>
       )}
@@ -680,7 +693,7 @@ function HistoryView({ s }: { s: DemoState }) {
       <div className="section-heading">
         <span className="eyebrow">SHARED RECORDS</span>
         <h1>Checks & feeding history</h1>
-        <p>Saved synthetic events for both demo views.</p>
+        <p>Saved demo records.</p>
       </div>
       <section className="card">
         <h2>Placement checks</h2>
@@ -773,7 +786,7 @@ function HistoryView({ s }: { s: DemoState }) {
                 ]}
               />
               <button onClick={() => void synchronize()}>
-                Share session with clinician
+                Share session with Clinician
               </button>
               <small>
                 Shared in this app. Hospital-chart integration is simulated.
@@ -864,17 +877,23 @@ export default function App() {
     beginCheck(kind);
     setTab("placement");
   };
-  const nav = [
-    {
-      id: "today" as Tab,
-      label: s.role === "clinician" ? "Overview" : "Today",
-      icon: Home,
-    },
-    { id: "placement" as Tab, label: "Placement", icon: ShieldCheck },
-    { id: "feeding" as Tab, label: "Feeding", icon: Activity },
-    { id: "resources" as Tab, label: "Help", icon: HelpCircle },
-    { id: "history" as Tab, label: "History", icon: History },
-  ];
+  const nav =
+    s.role === "caregiver"
+      ? [
+          { id: "today" as Tab, label: "Feeding", icon: Heart },
+          { id: "resources" as Tab, label: "Videos", icon: Play },
+        ]
+      : [
+          {
+            id: "today" as Tab,
+            label: s.role === "clinician" ? "Overview" : "Today",
+            icon: Home,
+          },
+          { id: "placement" as Tab, label: "Placement", icon: ShieldCheck },
+          { id: "feeding" as Tab, label: "Feeding", icon: Activity },
+          { id: "resources" as Tab, label: "Help", icon: HelpCircle },
+          { id: "history" as Tab, label: "History", icon: History },
+        ];
   return (
     <>
       <div className="demo-banner">DEMO — simulated patient and device</div>
@@ -889,16 +908,13 @@ export default function App() {
             </span>
           </div>
           <div className="login-card">
-            <span className="eyebrow">BIOHACK 2026</span>
+            <span className="eyebrow">OSU BioHack Fall 2026 Team 15</span>
             <h1>
-              A little guidance.
+              NG tube placement and feeding
               <br />
-              Every step of the way.
+              Caregiver and Clinician sign-in
             </h1>
-            <p>
-              Explore sensor-assisted insertion and feeding with a fictional
-              patient.
-            </p>
+            <p>Demo only. No real patient or device is connected.</p>
             <form
               onSubmit={(e) => {
                 e.preventDefault();
@@ -946,18 +962,20 @@ export default function App() {
                 <Heart size={18} /> Enter caregiver demo
               </button>
               <button onClick={() => login("clinician")}>
-                <Stethoscope size={18} /> Enter clinician demo
+                <Stethoscope size={18} /> Enter Clinician demo
               </button>
             </div>
             <small>
-              Demo credentials: caregiver / 123 or clinician / 123. Mock sign-in
-              is a presentation control. Only synthetic data is used.
+              Demo login: caregiver / 123 or clinician / 123. No real
+              authentication.
             </small>
           </div>
           <Installation />
         </main>
       ) : (
-        <div className="app-layout">
+        <div
+          className={`app-layout ${s.role === "caregiver" ? "caregiver-layout" : ""}`}
+        >
           <aside className="sidebar">
             <div className="brand">
               <span className="brand-mark">
@@ -969,12 +987,19 @@ export default function App() {
                 <strong>Assistant</strong>
               </span>
             </div>
-            <div className="view-label">{s.role} workspace</div>
+            <div className="view-label">{s.role} view</div>
             <nav>
               {nav.map((n) => (
                 <button
                   key={n.id}
-                  className={tab === n.id ? "selected" : ""}
+                  className={
+                    tab === n.id ||
+                    (s.role === "caregiver" &&
+                      n.id === "today" &&
+                      tab !== "resources")
+                      ? "selected"
+                      : ""
+                  }
                   onClick={() => setTab(n.id)}
                 >
                   <n.icon size={iconSize} />
@@ -983,23 +1008,29 @@ export default function App() {
                 </button>
               ))}
             </nav>
-            <div className="sidebar-footer">
-              <ShieldCheck size={24} />
-              <strong>A demonstration of care.</strong>
-              <p>
-                Fictional patient.
-                <br />
-                Readings, not clinical clearance.
-              </p>
-            </div>
+            {s.role === "clinician" && (
+              <div className="sidebar-footer">
+                <ShieldCheck size={24} />
+                <strong>Demo only</strong>
+                <p>
+                  Fictional patient.
+                  <br />
+                  Sensor readings alone do not confirm placement.
+                </p>
+              </div>
+            )}
           </aside>
           <div className="workspace">
             <header className="topbar">
               <span className="patient">
-                <span className="avatar">AD</span>
+                <span className="avatar">
+                  {s.role === "caregiver" ? <Heart size={19} /> : "AD"}
+                </span>
                 <span>
-                  <strong>Alex Demo</strong>
-                  <small>DEMO-PATIENT-01</small>
+                  <strong>
+                    {s.role === "caregiver" ? "Caregiver" : "Demo Patient"}
+                  </strong>
+                  {s.role === "clinician" && <small>DEMO-PATIENT-01</small>}
                 </span>
               </span>
               <div className="role-switch" aria-label="Switch demo view">
@@ -1021,23 +1052,24 @@ export default function App() {
               </button>
             </header>
             <main className="content">
-              <div className="storage-strip">
-                <span>
-                  <span
-                    className={`sync-dot ${sync.startsWith("Synchronized") ? "connected" : ""}`}
-                  />
-                  {sync}
-                </span>
-                <span>
-                  <Clock size={14} /> Demo clock{" "}
-                  {demoDate(s).toLocaleString([], {
-                    month: "short",
-                    day: "numeric",
-                    hour: "numeric",
-                    minute: "2-digit",
-                  })}
-                </span>
-              </div>
+              {s.role === "clinician" && (
+                <div className="storage-strip">
+                  <span>
+                    <span
+                      className={`sync-dot ${sync.startsWith("Synchronized") ? "connected" : ""}`}
+                    />
+                    {sync}
+                  </span>
+                  <span>
+                    <Clock size={14} /> Demo clock{" "}
+                    {demoDate(s).toLocaleString([], {
+                      month: "short",
+                      day: "numeric",
+                    })}{" "}
+                    {timeOf(demoDate(s).toISOString())}
+                  </span>
+                </div>
+              )}
               {sync.includes("conflict") && (
                 <div className="notice">
                   <p>
@@ -1096,136 +1128,80 @@ export default function App() {
                         <button onClick={() => acknowledge(a.id)}>
                           Acknowledge warning
                         </button>
-                        <button onClick={() => help(topics[3])}>
-                          Alert help
-                        </button>
+                        {s.role === "clinician" && (
+                          <button onClick={() => help(topics[3])}>
+                            Alert help
+                          </button>
+                        )}
                       </div>
                     </div>
                   </div>
                 ))}
-              {tab === "today" && (
+              {s.role === "caregiver" && tab !== "resources" && (
+                <CaregiverWorkflow s={s} />
+              )}
+              {s.role === "clinician" && tab === "today" && (
                 <>
                   <div className="section-heading">
-                    <span className="eyebrow">
-                      {s.role === "caregiver"
-                        ? "YOUR CARE COMPANION"
-                        : "CLINICIAN OVERVIEW"}
-                    </span>
-                    <h1>
-                      {s.role === "caregiver"
-                        ? "Let’s take the next step."
-                        : "A shared view of the demo."}
-                    </h1>
+                    <span className="eyebrow">CLINICIAN OVERVIEW</span>
+                    <h1>Demo Patient overview</h1>
                     <p>
                       {s.tubeInserted
                         ? "Tube recorded as inserted. Collect a fresh check before each feed."
-                        : "Start with insertion assistance. We’ll guide the demonstration."}
+                        : "Initial insertion check needed."}
                     </p>
                   </div>
-                  {s.role === "caregiver" ? (
-                    <>
-                      <section className="insertion-hero">
-                        <div className="hero-icon">
-                          <ShieldCheck size={34} />
-                        </div>
-                        <span className="eyebrow">
-                          START HERE · PLACEMENT ASSISTANCE
-                        </span>
-                        <h2>
-                          {s.tubeInserted
-                            ? "Here when you need to replace the tube."
-                            : "A clearer picture during insertion."}
-                        </h2>
-                        <p>
-                          Follow incoming pH and CO₂ indicators, with help close
-                          at hand.
-                        </p>
-                        <button onClick={() => startCheck("Insertion")}>
-                          Insert or replace NG tube <ArrowRight size={20} />
-                        </button>
-                      </section>
-                      <button
-                        className="check-action"
-                        disabled={!s.tubeInserted}
-                        onClick={() => startCheck("Pre-feed")}
-                      >
-                        <CheckCircle2 size={24} />
-                        <span>
-                          <strong>Check tube before feeding</strong>
-                          <small>
-                            {s.tubeInserted
-                              ? "A shorter check with fresh sensor readings"
-                              : "Available after the initial insertion demo"}
-                          </small>
-                        </span>
-                        <ChevronRight size={24} />
-                      </button>
-                      <PlanCard plan={plan} s={s} />
-                      <div className="help-card">
-                        <HelpCircle size={26} />
+
+                  <>
+                    <section className="card">
+                      <span className="eyebrow">
+                        SYNTHETIC PATIENT & DEVICE
+                      </span>
+                      <h2>
+                        Demo Patient <span className="pill">Fictional</span>
+                      </h2>
+                      <div className="numbers">
                         <div>
-                          <strong>Need a hand?</strong>
-                          <p>
-                            Find your assigned tutorials and demo instructions.
-                          </p>
+                          <strong>{s.checks.length}</strong>
+                          <span>Placement checks</span>
                         </div>
-                        <button onClick={() => help(topics[0])}>
-                          Open help <ArrowRight size={17} />
+                        <div>
+                          <strong>{s.sessions.length}</strong>
+                          <span>Feed sessions</span>
+                        </div>
+                        <div>
+                          <strong>
+                            {s.alerts.filter((a) => a.active).length}
+                          </strong>
+                          <span>Active warnings</span>
+                        </div>
+                      </div>
+                      <p>
+                        DEMO-DEVICE-01 ·{" "}
+                        {s.tubeInserted
+                          ? "Tube recorded as inserted"
+                          : "Initial insertion pending"}
+                      </p>
+                      <div className="button-row">
+                        <button
+                          className="primary"
+                          onClick={() => startCheck("Insertion")}
+                        >
+                          Open insertion assistance
+                        </button>
+                        <button onClick={() => setTab("history")}>
+                          Review history
                         </button>
                       </div>
-                    </>
-                  ) : (
-                    <>
-                      <section className="card">
-                        <span className="eyebrow">
-                          SYNTHETIC PATIENT & DEVICE
-                        </span>
-                        <h2>
-                          Alex Demo <span className="pill">Fictional</span>
-                        </h2>
-                        <div className="numbers">
-                          <div>
-                            <strong>{s.checks.length}</strong>
-                            <span>Placement checks</span>
-                          </div>
-                          <div>
-                            <strong>{s.sessions.length}</strong>
-                            <span>Feed sessions</span>
-                          </div>
-                          <div>
-                            <strong>
-                              {s.alerts.filter((a) => a.active).length}
-                            </strong>
-                            <span>Active warnings</span>
-                          </div>
-                        </div>
-                        <p>
-                          DEMO-DEVICE-01 ·{" "}
-                          {s.tubeInserted
-                            ? "Tube recorded as inserted"
-                            : "Initial insertion pending"}
-                        </p>
-                        <div className="button-row">
-                          <button
-                            className="primary"
-                            onClick={() => startCheck("Insertion")}
-                          >
-                            Open insertion assistance
-                          </button>
-                          <button onClick={() => setTab("history")}>
-                            Review history
-                          </button>
-                        </div>
-                      </section>
-                      <PlanEditor s={s} />
-                      <button onClick={() => help(topics[1])}>
-                        Assign or review tutorials <ArrowRight size={17} />
-                      </button>
-                    </>
-                  )}
+                    </section>
+                    <PlanEditor s={s} />
+                    <button onClick={() => help(topics[1])}>
+                      Assign or review tutorials <ArrowRight size={17} />
+                    </button>
+                  </>
                 </>
               )}
-              {tab === "placement" && (
+              {s.role === "clinician" && tab === "placement" && (
                 <>
                   <div className="section-heading">
                     <span className="eyebrow">
@@ -1235,12 +1211,12 @@ export default function App() {
                     </span>
                     <h1>
                       {s.checkKind === "Pre-feed"
-                        ? "Check before the next feed."
-                        : "Follow the placement indicators."}
+                        ? "Pre-feed placement check"
+                        : "Insertion placement check"}
                     </h1>
                     <p>
-                      Sensor indicators support this demonstration. They cannot
-                      authorize actual feeding.
+                      Sensor readings alone cannot confirm placement or
+                      authorize feeding.
                     </p>
                   </div>
                   <section className="card placement-card">
@@ -1275,9 +1251,8 @@ export default function App() {
                               onChange={(e) => setConfirmed(e.target.checked)}
                             />
                             <span>
-                              For this fictional demonstration, I acknowledge
-                              that the required clinical confirmation has been
-                              completed.
+                              For this demo, the required placement confirmation
+                              is complete.
                             </span>
                           </label>
                           <button
@@ -1351,15 +1326,11 @@ export default function App() {
                   </section>
                 </>
               )}
-              {tab === "feeding" && (
+              {s.role === "clinician" && tab === "feeding" && (
                 <>
                   <div className="section-heading">
                     <span className="eyebrow">SIMULATED FEEDING</span>
-                    <h1>
-                      {active
-                        ? "Keep an eye on the feed."
-                        : "The feeding plan, ready when you are."}
-                    </h1>
+                    <h1>{active ? "Feeding status" : "Feeding plan"}</h1>
                     <p>
                       All start, pause, and stop controls act only on this
                       simulation.
@@ -1385,7 +1356,7 @@ export default function App() {
                       <PlanCard plan={plan} s={s} />
                       <section className="card">
                         <label>
-                          Feeding fixture (sequenced after the placement check)
+                          Feeding scenario
                           <select
                             value={s.feedingScenarioId}
                             onChange={(e) =>
@@ -1406,24 +1377,23 @@ export default function App() {
                           </select>
                         </label>
                         <small>
-                          Prerecorded commanded flow is independent of an edited
-                          plan’s requested rate. Source timestamps are
-                          preserved.
+                          Changing the plan does not change the recorded sensor
+                          data.
                         </small>
                         {s.readyCheckId ? (
                           <p className="success-text">
-                            <CheckCircle2 size={18} /> Fresh check and fictional
+                            <CheckCircle2 size={18} /> Placement check and demo
                             confirmation recorded.
                           </p>
                         ) : (
                           <p>
-                            A fresh placement check and fictional confirmation
-                            are required.
+                            Complete a new placement check and demo confirmation
+                            first.
                           </p>
                         )}
                         <div className="button-row">
                           <button
-                            className="primary"
+                            className="primary start-feeding"
                             disabled={!s.readyCheckId}
                             onClick={() => startFeed()}
                           >
@@ -1629,25 +1599,31 @@ export default function App() {
               {tab === "resources" && (
                 <Resources s={s} topic={topic} setTopic={setTopic} />
               )}
-              {tab === "history" && <HistoryView s={s} />}
-              <DemoControls s={s} />
-              <Installation />
-              <footer className="footer">
-                BioHack 2026 · Synthetic demonstration · No physical pump or
-                hospital chart connection
-                <details>
-                  <summary>Dataset sources & limitations</summary>
-                  {references.map((r) => (
-                    <p key={r.source_id}>
-                      <a href={r.url} target="_blank" rel="noreferrer">
-                        {r.publisher}: {r.reference}
-                      </a>
-                      <br />
-                      {r.use_and_limit}
-                    </p>
-                  ))}
-                </details>
-              </footer>
+              {s.role === "clinician" && tab === "history" && (
+                <HistoryView s={s} />
+              )}
+              {s.role === "clinician" && tab !== "resources" && (
+                <DemoControls s={s} />
+              )}
+              {s.role === "clinician" && <Installation />}
+              {s.role === "clinician" && (
+                <footer className="footer">
+                  BioHack 2026 · Synthetic demonstration · No physical pump or
+                  hospital chart connection
+                  <details>
+                    <summary>Dataset sources & limitations</summary>
+                    {references.map((r) => (
+                      <p key={r.source_id}>
+                        <a href={r.url} target="_blank" rel="noreferrer">
+                          {r.publisher}: {r.reference}
+                        </a>
+                        <br />
+                        {r.use_and_limit}
+                      </p>
+                    ))}
+                  </details>
+                </footer>
+              )}
             </main>
           </div>
         </div>

@@ -22,12 +22,14 @@ For a deliberately local demo, open http://localhost:4173/?local. This disables 
 ## Walk through the demonstration
 
 1. Enter `caregiver` / `123`, or select **Enter caregiver demo**. Clinician credentials are `clinician` / `123`.
-2. Select **Insert or replace NG tube**. The default P01 fixture collects 50 consecutive samples. **Demo controls** chooses other fixtures and playback speeds.
-3. Open **Help & tutorial** whenever needed. Favorable readings show the limits of the sensor assessment. Check the fictional clinical-confirmation acknowledgment, then **Continue demo**.
-4. Choose a feeding plan and separate feeding fixture, then **Start simulated feed**. F01 measures 30 mL over 1,800 sensor seconds; at 20× replay this takes roughly 90 seconds. The original timestamps are preserved.
-5. Pause/resume/stop controls change only the simulated session. Replay controls move the prerecorded stream. On a major warning, the simulated session stops but replay continues for inspection. Acknowledging keeps the warning visible.
-6. Later feeds use **Check tube before feeding**, requiring a fresh sensor window and another fictional confirmation. Previously consumed checks cannot start another feed. Tube insertion state persists.
+2. The caregiver has two tabs: **Feeding** and **Videos**. Feeding is a guided sequence: check tube → start feeding → monitor. Select **Check tube placement** to collect fresh readings.
+3. Favorable indicators still require the fictional clinical-confirmation acknowledgment. Select **Continue to feeding**, review the amount, rate, and instructions, then **Start feeding**. A failed or incomplete check cannot unlock feeding.
+4. The monitor shows delivery progress, plain-language status, and pause/resume/stop controls. Caregiver pause also freezes replay; resume restarts it at the same position. Warnings stop the simulated feed and remain visible after acknowledgment.
+5. Videos are optional and never required to start a feed. This tab has no demo controls. Caregiver screens omit sensor graphs, source timestamps, fixture selection, and technical storage details.
+6. Later feeds use **Check tube for next feed**, requiring a fresh sensor window and another fictional confirmation. Previously consumed checks cannot start another feed. Tube insertion state persists. **Insert or replace tube** remains available separately after insertion is recorded.
 7. Switch to **Clinician** to edit times, amounts, rates, instructions, reminders, or tutorial assignments. Both views use the same simulation and records. **History** contains source timestamps, placement measurements, sessions, missing-data indicators, alerts, and acknowledgment history.
+
+Clinician Demo controls choose placement/feeding fixtures, playback speeds, uploads, and input sources. They are available on clinical workflow screens, not the video library. F01 measures 30 mL over 1,800 sensor seconds; at 20× this takes roughly 90 seconds. Original source timestamps and the underlying algorithm are unchanged.
 
 The demonstration clock begins five minutes before the first fictional order. It advances by sensor time independently of historical timestamps. Reminders are in-app labels, with no notifications or background monitoring. On refresh, playback resumes **paused at the saved position**; the active simulation’s session record is retained until the user resumes or ends it.
 

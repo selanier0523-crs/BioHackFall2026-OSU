@@ -95,6 +95,12 @@ export type DemoState = {
   revision: number;
 };
 const LOCAL_KEY = "ng-tube-assistant-v1";
+const normalizePlans = (plans: Plan[]) =>
+  plans.map((plan) =>
+    plan.time === "2026-10-03T19:59:59.999Z"
+      ? { ...plan, time: "2026-10-03T20:00:00.000Z" }
+      : plan,
+  );
 export const topics = [
   "NG-tube insertion",
   "Understanding a placement check",
@@ -174,6 +180,7 @@ export function acceptRemote(remote: DemoState, revision: number) {
   const role = state.role;
   state = {
     ...remote,
+    plans: normalizePlans(remote.plans),
     role,
     revision,
     playing: false,
@@ -239,6 +246,7 @@ export async function initialize() {
     if (local?.version === 1)
       state = {
         ...local,
+        plans: normalizePlans(local.plans),
         playing: false,
         sourceMode: "csv",
         serialStatus: "Disconnected",
@@ -255,7 +263,12 @@ export async function initialize() {
     if (e.key === LOCAL_KEY && e.newValue) {
       try {
         const remote = JSON.parse(e.newValue);
-        state = { ...remote, role: state.role, playing: false };
+        state = {
+          ...remote,
+          plans: normalizePlans(remote.plans),
+          role: state.role,
+          playing: false,
+        };
         listeners.forEach((fn) => fn());
       } catch {
         /* preserve current state */

@@ -7,15 +7,16 @@
     BlinkMacSystemFont,
     "Segoe UI",
     sans-serif;
-  color: #233e38;
-  background: #f5f7f4;
+  color: #192e44;
+  background: #eaf0f6;
   font-synthesis: none;
   font-weight: 400;
   line-height: 1.5;
   font-size: 16px;
-  --green: #176c60;
-  --muted: #657a73;
-  --border: #dce5df;
+  --green: #104e36;
+  --blue: #164d86;
+  --muted: #465b70;
+  --border: #b7c5d4;
 }
 * {
   box-sizing: border-box;
@@ -35,16 +36,16 @@ button {
   justify-content: center;
   gap: 9px;
   min-height: 46px;
-  border: 1px solid var(--border);
+  border: 1px solid #7e94ac;
   border-radius: 10px;
   padding: 10px 17px;
   background: #fff;
-  color: #294c42;
+  color: #203f60;
   font-weight: 600;
   cursor: pointer;
 }
 button:hover {
-  background: #edf5ef;
+  background: #e7f0fb;
 }
 button:disabled {
   opacity: 0.5;
@@ -71,7 +72,7 @@ p {
 h1,
 h2,
 h3 {
-  color: #203e35;
+  color: #182f4a;
   line-height: 1.22;
 }
 h1 {
@@ -97,7 +98,7 @@ strong {
   font-weight: 650;
 }
 a {
-  color: var(--green);
+  color: var(--blue);
 }
 label {
   display: flex;
@@ -127,15 +128,27 @@ select {
   text-overflow: ellipsis;
 }
 .primary {
-  background: var(--green);
-  border-color: var(--green);
+  background: var(--blue);
+  border-color: var(--blue);
   color: white;
 }
 .primary:hover {
-  background: #11574d;
+  background: #103963;
+}
+.primary {
+  box-shadow: 0 3px 8px #164d8626;
 }
 .full {
   width: 100%;
+}
+.start-feeding {
+  background: #a9dfb4;
+  border-color: #62a873;
+  color: #153f23;
+  box-shadow: 0 3px 8px #2b673526;
+}
+.start-feeding:hover {
+  background: #95d5a2;
 }
 .text-button {
   border: none;
@@ -146,12 +159,12 @@ select {
   color: #a13532;
 }
 .danger-button {
-  background: #a93731;
+  background: #7d2428;
   color: #fff;
-  border-color: #a93731;
+  border-color: #7d2428;
 }
 .danger-button:hover {
-  background: #8a2823;
+  background: #60181c;
 }
 .button-row {
   display: flex;
@@ -175,7 +188,7 @@ select {
   font-size: 11px;
   letter-spacing: 1.5px;
   font-weight: 700;
-  color: var(--green);
+  color: var(--blue);
 }
 .muted {
   color: var(--muted);
@@ -214,7 +227,7 @@ select {
   border-radius: 13px;
   display: grid;
   place-items: center;
-  background: #176c60;
+  background: var(--blue);
   color: white;
 }
 .app-layout {
@@ -252,8 +265,8 @@ select {
   padding: 15px;
 }
 .sidebar nav button.selected {
-  background: #eaf3eb;
-  color: #176c60;
+  background: var(--blue);
+  color: #fff;
 }
 .nav-dot {
   width: 6px;
@@ -309,8 +322,8 @@ select {
   display: grid;
   place-items: center;
   border-radius: 50%;
-  background: #ecede3;
-  color: #697851;
+  background: #dfeafa;
+  color: var(--blue);
   font-size: 13px;
 }
 .role-switch {
@@ -330,8 +343,8 @@ select {
   color: var(--muted);
 }
 .role-switch button.active {
-  color: #176c60;
-  background: #fff;
+  color: #fff;
+  background: var(--blue);
   box-shadow: 0 1px 4px #233e3815;
 }
 .signout {
@@ -373,7 +386,7 @@ select {
   max-width: 600px;
 }
 .insertion-hero {
-  background: #176c60;
+  background: #183f69;
   border-radius: 16px;
   color: #fff;
   padding: 30px 32px;
@@ -381,7 +394,7 @@ select {
   position: relative;
 }
 .insertion-hero .eyebrow {
-  color: #b7d6c7;
+  color: #c5daf4;
 }
 .insertion-hero h2 {
   color: #fff;
@@ -391,13 +404,13 @@ select {
   margin: 16px 65px 14px 0;
 }
 .insertion-hero p {
-  color: #d0e1d8;
+  color: #dce8f7;
   font-size: 14px;
   margin-bottom: 24px;
   max-width: 450px;
 }
 .insertion-hero button {
-  color: #176c60;
+  color: var(--blue);
   min-height: 49px;
   border: 0;
 }
@@ -441,6 +454,7 @@ select {
   background: #fff;
   border-radius: 14px;
   margin: 22px 0;
+  box-shadow: 0 5px 18px #183f2e0d;
 }
 .plan-card h2 {
   margin: 21px 0 19px;
@@ -458,9 +472,9 @@ select {
   align-items: center;
   padding: 4px 10px;
   border-radius: 20px;
-  background: #edf3eb;
+  background: #dae8fa;
   font-size: 10px;
-  color: #53725c;
+  color: #214d7b;
   white-space: nowrap;
 }
 .numbers {
@@ -542,9 +556,9 @@ select {
   border-radius: 12px;
   padding: 24px;
   margin: 24px 0;
-  background: #f3f1e7;
-  border: 1px solid #e6dfc5;
-  color: #987128;
+  background: #fff0c7;
+  border: 1px solid #9b7428;
+  color: #624500;
 }
 .status h2 {
   font-size: 24px;
@@ -567,14 +581,14 @@ select {
   flex-shrink: 0;
 }
 .status.good {
-  background: #eef6ed;
-  border-color: #cde2cf;
-  color: #286645;
+  background: #104e36;
+  border-color: #083b27;
+  color: #fff;
 }
 .status.bad {
-  background: #fff0ec;
-  border-color: #eec5bb;
-  color: #a33e31;
+  background: #7d2428;
+  border-color: #60181c;
+  color: #fff;
 }
 .fictional-confirm {
   padding: 18px 0;
@@ -592,7 +606,7 @@ select {
   height: 22px;
   min-height: 22px;
   margin: 2px 0;
-  accent-color: #176c60;
+  accent-color: var(--blue);
 }
 .sensor-details {
   border-top: 1px solid var(--border);
@@ -659,7 +673,7 @@ select {
 progress {
   height: 10px;
   width: 100%;
-  accent-color: #176c60;
+  accent-color: var(--blue);
   border: 0;
   margin-top: 15px;
 }
@@ -668,7 +682,7 @@ progress::-webkit-progress-bar {
   border-radius: 6px;
 }
 progress::-webkit-progress-value {
-  background: #176c60;
+  background: var(--blue);
   border-radius: 6px;
 }
 .metric-grid {
@@ -925,7 +939,13 @@ progress::-webkit-progress-value {
 .active-alert button {
   font-size: 11px;
   min-height: 40px;
-  border-color: #edcbc2;
+  border-color: #fff;
+  color: #60181c;
+}
+.active-alert {
+  background: #7d2428;
+  border-color: #60181c;
+  color: #fff;
 }
 .error {
   color: #a3342c;
@@ -1305,5 +1325,151 @@ progress::-webkit-progress-value {
   }
   .footer {
     font-size: 9px;
+  }
+}
+.caregiver-flow {
+  max-width: 600px;
+  margin: 12px auto;
+}
+.workflow-steps {
+  list-style: none;
+  display: flex;
+  gap: 12px;
+  padding: 0;
+  margin: 10px 0 36px;
+}
+.workflow-steps li {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #465d52;
+  font-size: 12px;
+}
+.workflow-steps li > span {
+  width: 30px;
+  height: 30px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: #e7ede5;
+  font-weight: 600;
+  flex-shrink: 0;
+}
+.workflow-steps .current {
+  color: var(--blue);
+  font-weight: 650;
+}
+.workflow-steps .current > span {
+  background: var(--blue);
+  color: white;
+}
+.workflow-steps .done {
+  color: var(--green);
+}
+.workflow-card {
+  padding: 30px;
+  border: 2px solid #829ab4;
+  box-shadow: 0 6px 22px #183f6914;
+}
+.workflow-card > h2 {
+  margin-top: 18px;
+}
+.workflow-icon {
+  color: var(--blue);
+}
+.workflow-card .primary.full {
+  margin-top: 18px;
+  min-height: 54px;
+}
+.workflow-card .status {
+  margin-top: 0;
+}
+.workflow-note {
+  display: block;
+  text-align: center;
+  margin-top: 14px;
+}
+.check-confirmed {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #fff;
+  background: var(--green);
+  padding: 12px 14px;
+  border-radius: 9px;
+  font-size: 14px;
+  margin-bottom: 24px;
+}
+.caregiver-instructions {
+  font-size: 14px;
+  border-top: 1px solid var(--border);
+  padding-top: 18px;
+}
+.feeding-reminder h2 {
+  margin: 0;
+  color: #183f69;
+}
+.feeding-plan-card {
+  background: #f0f6ff;
+  border-color: #93afd0;
+  border-left: 5px solid var(--blue);
+}
+.feeding-reminder .numbers strong,
+.feeding-schedule strong {
+  color: var(--blue);
+}
+.feeding-reminder .spread {
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.feeding-reminder h3 {
+  margin-bottom: 8px;
+  font-size: 14px;
+}
+.feeding-reminder .caregiver-instructions {
+  border-top: 0;
+  padding-top: 0;
+  margin-top: 0;
+  white-space: pre-wrap;
+}
+.feeding-schedule strong {
+  font-size: 24px;
+}
+.feeding-schedule small {
+  display: block;
+  color: var(--muted);
+}
+.feeding-steps {
+  font-size: 14px;
+  margin-bottom: 0;
+}
+.feeding-reminder .numbers {
+  flex-wrap: wrap;
+}
+.caregiver-layout .content {
+  padding-top: 28px;
+}
+@media (max-width: 640px) {
+  .caregiver-layout .sidebar nav {
+    gap: 8px;
+  }
+  .caregiver-layout .content {
+    padding-top: 22px;
+  }
+  .workflow-steps {
+    gap: 8px;
+    margin-bottom: 28px;
+  }
+  .workflow-steps li {
+    gap: 6px;
+    font-size: 11px;
+  }
+  .workflow-steps li > span {
+    width: 25px;
+    height: 25px;
+  }
+  .workflow-card {
+    padding: 24px 19px;
   }
 }
