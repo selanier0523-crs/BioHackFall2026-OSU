@@ -910,9 +910,9 @@ export default function App() {
           <div className="login-card">
             <span className="eyebrow">OSU BioHack Fall 2026 Team 15</span>
             <h1>
-              NG tube placement and feeding
+              NG Tube Assistant App
               <br />
-              Caregiver and Clinician sign-in
+              Sign in
             </h1>
             <p>Demo only. No real patient or device is connected.</p>
             <form
