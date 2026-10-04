@@ -273,7 +273,7 @@ export const statusText: Record<Assessment, [string, string]> = {
   ],
   OBSTRUCTION_ALERT: [
     "Stop feeding — obstruction alert",
-    "Flow at the tube end is near zero and pressure remains high. This warning stays active until the scenario is restarted.",
+    "Flow at the tube end is near zero and pressure remains high. Clearing the warning does not restart feeding.",
   ],
   DELIVERY_MISMATCH: [
     "Stop feeding — flow readings differ",

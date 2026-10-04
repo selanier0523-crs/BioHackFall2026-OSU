@@ -28,7 +28,7 @@ An initial metric discrepancy at zero proximal flow was investigated and fixed: 
 - Fresh checks cannot be reused. Session pause/resume/stop, refresh persistence and intentionally paused replay after refresh.
 - Airway, weak airway, neutral/raised pH, acid reflux, and disconnected placement fixtures.
 - Clinician plan editing, shared caregiver instructions, searchable tutorials, assignment and viewed completion.
-- Fault stops, continued prerecorded playback after the simulation stops, latched obstruction, acknowledgment retaining the warning, and direct alert help.
+- Fault stops freeze sensor replay, sample position, analysis, session readings, delivered volume, and demo time at the triggering sample, including within a batch. Acknowledgment retains the warning; clearing hides it while preserving the assessment, error history, and stopped session.
 - Browser replay of raised/lowered pump height, partial obstruction, flow mismatch, dropout, maintained-flow resistance, and intentional pause.
 - Valid CSV upload, invalid-file feedback, mobile width checks, offline production reload and bundled readings, standalone manifest and icons.
 - Actual Supabase synchronization across independent browser contexts, refresh, offline queued plan editing, and reconnect propagation.

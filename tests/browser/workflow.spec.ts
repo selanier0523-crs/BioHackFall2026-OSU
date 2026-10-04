@@ -254,7 +254,7 @@ test("clinician plan edits and video assignments reach caregiver", async ({
   await page.getByLabel("Search resources").fill("equipment");
   await expect(page.locator(".resource")).toHaveCount(1);
 });
-test("feeding fault stays visible after caregiver acknowledgment", async ({
+test("feeding fault freezes replay and can be cleared without restarting feeding", async ({
   page,
 }) => {
   await page.clock.install();
@@ -285,9 +285,31 @@ test("feeding fault stays visible after caregiver acknowledgment", async ({
     page.getByText("Acknowledged; cause remains unresolved.", { exact: false }),
   ).toBeVisible();
   const volume = (await state(page)).sessions[0].volume;
+  const stopped = await state(page);
+  expect(stopped.playing).toBe(false);
+  expect(stopped.index).toBe(stopped.sessions[0].records.length);
   await page.clock.runFor(2000);
-  expect((await state(page)).sessions[0].volume).toBe(volume);
-  expect((await state(page)).analysis.latched).toBe(true);
+  const later = await state(page);
+  expect(later.sessions[0].volume).toBe(volume);
+  expect(later.analysis).toEqual(stopped.analysis);
+  expect(later.index).toBe(stopped.index);
+  expect(later.demoSeconds).toBe(stopped.demoSeconds);
+  expect(later.sessions[0].records).toEqual(stopped.sessions[0].records);
+  expect(later.analysis.latched).toBe(stopped.analysis.latched);
+  await page
+    .getByRole("button", { name: "Clear warning", exact: true })
+    .click();
+  await expect(page.locator(".active-alert")).toHaveCount(0);
+  await expect(
+    page.getByRole("heading", { name: "Feeding stopped.", exact: true }),
+  ).toBeVisible();
+  await page.clock.runFor(2000);
+  const cleared = await state(page);
+  expect(cleared.playing).toBe(false);
+  expect(cleared.analysis).toEqual(stopped.analysis);
+  expect(cleared.sessions[0].status).toBe("STOPPED");
+  expect(cleared.alerts[0].active).toBe(false);
+  expect(cleared.alerts[0].state).toBe(stopped.alerts[0].state);
 });
 test("clinician uploads CSV and caregiver workflow works offline on mobile", async ({
   page,

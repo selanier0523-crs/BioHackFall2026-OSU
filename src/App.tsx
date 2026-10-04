@@ -28,6 +28,7 @@ import {
 import { statusText, stopStates } from "./analysis";
 import {
   acknowledge,
+  clearWarning,
   activeSession,
   beginCheck,
   confirmCheck,
@@ -1128,12 +1129,19 @@ export default function App() {
                         <button onClick={() => acknowledge(a.id)}>
                           Acknowledge warning
                         </button>
+                        <button onClick={() => clearWarning(a.id)}>
+                          Clear warning
+                        </button>
                         {s.role === "clinician" && (
                           <button onClick={() => help(topics[3])}>
                             Alert help
                           </button>
                         )}
                       </div>
+                      <p>
+                        Clearing the warning keeps feeding stopped. The error
+                        stays in history.
+                      </p>
                     </div>
                   </div>
                 ))}

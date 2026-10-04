@@ -446,7 +446,18 @@ export function pump(action: "pause" | "resume" | "stop") {
           : v,
       ),
     };
+  state = {
+    ...state,
+    playing: action === "resume" && state.sourceMode === "csv",
+  };
   emit();
+}
+export function clearWarning(id: string) {
+  update({
+    alerts: state.alerts.map((alert) =>
+      alert.id === id ? { ...alert, active: false } : alert,
+    ),
+  });
 }
 export function acknowledge(id: string) {
   update({
@@ -470,7 +481,8 @@ export function processSample(row: Sample, phase: Phase) {
       ? stepPlacement(state.analysis, row, settings)
       : stepFeeding(state.analysis, row, settings);
   let sessions = state.sessions,
-    alerts = state.alerts;
+    alerts = state.alerts,
+    stopReplay = false;
   if (phase === "Feeding" && active) {
     const running = active.status === "RUNNING";
     let updated: Session = {
@@ -484,6 +496,7 @@ export function processSample(row: Sample, phase: Phase) {
         (running && analysis.metrics.intervalVolume === null ? 1 : 0),
     };
     if (running && stopStates.has(analysis.state)) {
+      stopReplay = true;
       updated = {
         ...updated,
         status: "STOPPED",
@@ -506,6 +519,7 @@ export function processSample(row: Sample, phase: Phase) {
       updated.missing === 0 &&
       updated.volume >= active.target - 1e-6
     ) {
+      stopReplay = true;
       updated = {
         ...updated,
         status: "COMPLETED",
@@ -520,6 +534,7 @@ export function processSample(row: Sample, phase: Phase) {
     analysis,
     sessions,
     alerts,
+    playing: stopReplay ? false : state.playing,
     index: state.index + 1,
     demoSeconds:
       state.demoSeconds +
@@ -529,7 +544,11 @@ export function processSample(row: Sample, phase: Phase) {
 // Process EVERY sensor interval even when a render tick advances several samples.
 export function advance(count: number) {
   const scenario = currentScenario();
-  for (let i = 0; i < count && state.index < scenario.samples.length; i++)
+  for (
+    let i = 0;
+    i < count && state.playing && state.index < scenario.samples.length;
+    i++
+  )
     processSample(scenario.samples[state.index], scenario.phase);
   if (state.index === scenario.samples.length) {
     state = { ...state, playing: false };
