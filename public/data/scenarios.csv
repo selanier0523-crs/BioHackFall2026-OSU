@@ -1,0 +1,18 @@
+scenario_id,phase,label,duration_s,sample_hz,records,first_excel_row,last_excel_row,note
+P01,Placement,Acidic stomach,45,5,225,2,226,Acidic reading with no respiratory waveform.
+P02,Placement,Airway waveform,45,5,225,227,451,Repeated approximately 40 mmHg exhalation plateaus.
+P03,Placement,Neutral oesophagus,45,5,225,452,676,High pH and no waveform remain inconclusive.
+P04,Placement,Raised gastric pH,45,5,225,677,901,Simulated acid suppression or recent feed; pH about 6.2.
+P05,Placement,Acid reflux confounder,45,5,225,902,1126,Same sensor values as P01 despite different location; exposes non-identifiability.
+P06,Placement,Connection dropout,45,5,225,1127,1351,Missing packets from 15 to 25 s; reacquire a full window.
+P07,Placement,Isolated CO2 spike,45,5,225,1352,1576,One 0.6 s spike at 20 s; no repeating respiratory pattern.
+P08,Placement,Weak airway waveform,45,5,225,1577,1801,Diluted waveform around 8 mmHg; do not require a normal end-tidal peak.
+F01,Feeding,Complete normal feed,1800,1,1800,2,1801,30 mL delivered over 30 min at 60 mL/hr.
+F02,Feeding,Pump raised,180,1,180,1802,1981,Height rises from +0.3 to +0.8 m; raw pressure falls without added resistance.
+F03,Feeding,Pump lowered,180,1,180,1982,2161,Height drops from +0.3 to -0.3 m; raw pressure rises without added resistance.
+F04,Feeding,Partial obstruction,180,1,180,2162,2341,Both flows decline together while corrected pressure loss increases.
+F05,Feeding,Complete obstruction,180,1,180,2342,2521,Both flows approach zero; pressure builds and alert latches; pump stops at 120 s.
+F06,Feeding,Leak or flow disagreement,180,1,180,2522,2701,Proximal 60 vs distal 30 mL/hr; elevated resistance is absent.
+F07,Feeding,Connection dropout,180,1,180,2702,2881,No measured data from 80 to 100 s; known volume excludes missing intervals.
+F08,Feeding,"Resistance, flow maintained",180,1,180,2882,3061,Pump maintains flow while pressure rises; catches obstruction without mismatch.
+F09,Feeding,Intentional pause,180,1,180,3062,3241,Command and both flows are zero from 60 to 100 s; avoid divide-by-zero and false obstruction.

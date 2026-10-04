@@ -1,0 +1,22 @@
+parameter,value,unit,meaning,basis
+density_kg_m3,1030,kg/m3,Assumed water-like formula density. Replace with measured density.,Simulation assumption
+g_m_s2,9.80665,m/s2,Standard gravity used for height compensation.,Physical constant
+pa_per_kpa,1000,Pa/kPa,Pressure unit conversion.,Unit conversion
+baseline_resistance,0.05,kPa/(mL/hr),Illustrative clean-tube resistance. Includes tubing/formula effects.,Simulation assumption
+seconds_per_hour,3600,s/hr,Volume integration conversion.,Unit conversion
+ph_gastric_upper,5.5,pH,Literature context for aspirate testing only; no validation of this tip sensor.,S1
+ph_gastric_lower,1,pH,Lower bound of cited aspirate range.,S1
+co2_pulse_threshold,3,mmHg,Toy pulse segmentation threshold; not a clinical airway cutoff.,Simulation assumption
+placement_window_s,10,s,Require complete valid window; respiratory pattern needs at least 2 pulse starts.,Simulation assumption
+flow_window_s,10,s,Trailing mean window for feeding demo decisions.,Simulation assumption
+flow_mismatch_fraction,0.15,fraction,Absolute proximal-distal difference / proximal mean.,Simulation assumption
+flow_low_fraction,0.8,fraction,Distal mean below 80% of commanded flow.,Simulation assumption
+extra_pressure_kpa,5,kPa,Excess over clean-tube resistance after gravity correction.,Simulation assumption
+alert_persistence_s,10,s,Continuous anomaly before demo alert; no clinical validation.,Simulation assumption
+near_zero_flow_ml_hr,1,mL/hr,Near-zero distal flow for synthetic complete-obstruction test.,Simulation assumption
+severe_extra_kpa,10,kPa,Synthetic complete-obstruction criterion.,Simulation assumption
+severe_persistence_s,5,s,Synthetic critical-alert persistence.,Simulation assumption
+placement_sample_hz,5,Hz,200 ms between raw CO2/pH samples; demonstration resolution only.,Simulation assumption
+feeding_sample_hz,1,Hz,Flow readings are one-second interval means.,Simulation assumption
+nominal_flow_ml_hr,60,mL/hr,Chosen demonstration setpoint; not a patient prescription.,S3 context; simulation value
+full_demo_volume_ml,30,mL,30-minute demonstration at 60 mL/hr.,Simulation assumption
